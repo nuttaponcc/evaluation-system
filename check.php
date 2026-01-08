@@ -1,0 +1,46 @@
+<?php
+session_start();
+
+
+$in_log=$_POST[in_log];
+$in_pw=$_POST[in_pw];
+
+if(!empty($in_log)){
+include"tools/connect.php";
+  $querys = "select * from scdb_user where user_name = '$in_log' ";
+  $result = mysql_query($querys,$link);
+ $r=mysql_fetch_array($result);
+ 
+  if($in_log== $r[user_name]  && $in_pw == $r[user_password]  ){
+   $_SESSION[session_user_name1]=$r[user_name1];
+   $_SESSION[session_user_id]=$r[user_id];
+   $_SESSION[session_user_major] = $r[user_major];
+	 $_SESSION[session_log]= session_id();
+	  $_SESSION[session_username]=$in_log;
+	  $_SESSION[session_password]=$in_pw;
+	  $_SESSION[session_group] = $group1;
+	  if ($r[user_id]==482)$_SESSION[session_level] = 1; else $_SESSION[session_level] = 0;  
+	  
+     mysql_close($link); 
+   include"tools/connect-eval.php";
+  $querys = "INSERT INTO `evaluation`.`stat` (
+`id` ,
+`user` ,
+`intime` ,
+`ip` ,
+`detail`
+)
+VALUES (
+NULL , '".$r[user_id]."', NOW(), '".$_SERVER['REMOTE_ADDR']."', ''
+) ";
+  $result = mysql_query($querys,$link);
+   mysql_close($link); 
+	 
+	 header("Location: index.php");
+  }else {
+ header("Location: index.php");
+}
+}
+
+
+?>

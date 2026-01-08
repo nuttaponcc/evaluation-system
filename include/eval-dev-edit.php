@@ -1,0 +1,132 @@
+<?
+include"tools/connect-eval.php";
+
+$other=$_GET['other'];
+   	$query = "SELECT * FROM `dev`  where   devid=".$id;
+//	echo "$query";
+	$result = mysql_query($query);
+    $row = mysql_fetch_assoc($result)
+
+?>
+
+<SCRIPT LANGUAGE="JavaScript">
+function changediv(text,name,w){
+//alert(name);
+switch(name)
+{
+case 'course':
+  document.getElementById("textcourse").innerHTML = text;
+  break;
+case  "week":
+  document.getElementById("textweek").innerHTML = text;
+  break;
+case  'workload':
+if (text=="18")
+  {
+		document.getElementById("textworkload").innerHTML = "<input type=\"text\" name=\"amount\" />";
+  }else{
+		document.getElementById("textworkload").innerHTML = "";  
+  }
+  break;
+case  'multiplier':
+		switch(text)
+			{
+				case "1":
+							  document.getElementById("textmultiplier").innerHTML = "ตัวคูณ=1  มีระบบกลไกในการควบคุม กำกับ ประเมิน และพัฒนาหลักสูตร";
+				  break;
+				case "2":
+							  document.getElementById("textmultiplier").innerHTML = "ตัวคูณ=2 มี มคอ. 3, 5 ครบทุกรายวิชาที่เปิดสอน";
+				  break;
+				case "3":
+							  document.getElementById("textmultiplier").innerHTML = "ตัวคูณ=3 มีการประเมินหลักสูตรอย่างน้อยตามกรอบเวลาที่กำหนดในเกณฑ์มาตรฐานหลักสูตรฯ ";
+				  break;
+				case "4":
+							  document.getElementById("textmultiplier").innerHTML = "ตัวคูณ=4 มี มคอ. 7 ตามเวลาที่กำหนด";
+				  break;
+				case "5":
+							  document.getElementById("textmultiplier").innerHTML = "ตัวคูณ=5 หลักสูตรผ่านการประเมินตามกรอบมาตรฐาน TQF";
+				  break;
+         	}
+
+  break;
+case  'goal':
+  document.getElementById("textgoal").innerHTML = text;
+  break;
+default:
+  ;
+}
+
+}
+</SCRIPT>
+<style type="text/css">
+<!--
+.style1 {color: #FF0000}
+-->
+</style>
+
+<table width="100%" border="0" cellspacing="10" cellpadding="0">
+  <tr>
+    <td>
+<div align="left">
+  <p><strong>เพิ่ม</strong></p>
+  <p><strong>แผนพัฒนารายบุคคล</strong><br /></p>
+  <form action="action/edit-dev.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
+  <table border="0" cellpadding="5" bgcolor="#FFFFFF">
+    <tr>
+      <td align="left" valign="top" bgcolor="#99FFFF"><strong>
+        <input name="id" type="hidden" id="id" value="<? echo $id ?>" />
+        ชื่อหัวข้อที่จะพัฒนา</strong></td>
+      <td align="left" valign="top" bgcolor="#99FFFF"><input name="subj" type="text" id="subj" value="<?  echo $row['subj']; ?>" size="80" /></td>
+      <td align="left" valign="top" bgcolor="#99FFFF">Ex. อบรมทคนิคการเขียนและผลิตตำราทางวิชาการ </td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" bgcolor="#99FFFF"><strong>เป้าหมายการพัฒนา</strong></td>
+      <td align="left" valign="top" bgcolor="#99FFFF"><input name="gold" type="text" id="gold" value="<?  echo  $row['gold'] ?>" size="80" /></td>
+      <td align="left" valign="top" bgcolor="#99FFFF">&nbsp;</td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" bgcolor="#99FFFF"><strong>วิธีการพัฒนา</strong></td>
+      <td align="left" valign="top" bgcolor="#99FFFF"><textarea name="method" cols="77" rows="3" id="method"><?  echo  $row['method'] ?>
+      </textarea></td>
+      <td align="left" valign="top" bgcolor="#99FFFF">&nbsp;</td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" bgcolor="#99FFFF"><strong>ระยะเวลา เริ่มต้นและสิ้นสุด</strong></td>
+      <td align="left" valign="top" bgcolor="#99FFFF"><input name="ptime" type="text" id="ptime" value="<?  echo  $row['ptime']; ?>" size="80" /></td>
+      <td align="left" valign="top" bgcolor="#99FFFF">&nbsp;</td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" bgcolor="#99FFFF">งบประมาณ </td>
+      <td align="left" valign="top" bgcolor="#99FFFF"><input name="budget" type="text" id="budget" value="<?  echo  $row['budget']; ?>" size="80" /></td>
+      <td align="left" valign="top" bgcolor="#99FFFF">&nbsp;</td>
+    </tr>
+    <tr>
+      <td align="left" valign="top" bgcolor="#99FFFF">การวัดผลสำเร็จ</td>
+      <td align="left" valign="top" bgcolor="#99FFFF"><label>
+      <select name="status" id="status">
+	  <?
+	           if($row['status']=="ไม่ระบุ") echo "<option value=\"ไม่ระบุ\" selected=\"selected\">ไม่ระบุ</option>"; else  echo "<option value=\"ไม่ระบุ\" >ไม่ระบุ</option>";
+	           if($row['status']=="สำเร็จ") echo "<option value=\"สำเร็จ\" selected=\"selected\">สำเร็จ</option>"; else  echo "<option value=\"สำเร็จ\" >สำเร็จ</option>";
+	           if($row['status']=="ไม่สำเร็จ") echo "<option value=\"ไม่สำเร็จ\" selected=\"selected\">ไม่สำเร็จ</option>"; else  echo "<option value=\"ไม่สำเร็จ\" >ไม่สำเร็จ</option>";
+	           if($row['status']=="ยกเลิก") echo "<option value=\"ยกเลิก\" selected=\"selected\">ยกเลิก</option>"; else  echo "<option value=\"ยกเลิก\" >ยกเลิก</option>";
+	  ?>
+          </select>
+      </label></td>
+      <td align="left" valign="top" bgcolor="#99FFFF">&nbsp;</td>
+    </tr>
+  </table>
+    <p>
+      <input type="submit" name="Submit" value="บันทึก" />
+    </p>
+  </form>
+
+  <p>
+  </p>
+  <p>หากต้องการเพิ่มเติมแก้ไข กรุณาแจ้งมาที่เบอร์โทรศัพท์ภายใน 1507 หรือ ที่ email : <a href="mailto : kriengkrai.n@msu.ac.th">kriengkrai.n@msu.ac.th</a><br />
+    SC2-201/1<br />
+    เกรียงไกร นามพุทธา<br />
+    ผู้พัฒนาระบบ</p>
+</div>
+	</td>
+  </tr>
+</table>
