@@ -1,0 +1,210 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Job {
+  id            String   @id @default(cuid())
+  jobId         String   @unique @map("job_id")
+  title         String   @db.VarChar(200)
+  jobType       JobType  @map("job_type")
+  company       String   @db.VarChar(200)
+  salaryMin     Decimal? @map("salary_min") @db.Decimal(10, 2)
+  salaryMax     Decimal? @map("salary_max") @db.Decimal(10, 2)
+  description   String   @db.Text
+  requirements  String   @db.Text
+  benefits      String?  @db.Text
+  location      String   @db.VarChar(200)
+  contactPerson String   @map("contact_person") @db.VarChar(200)
+  contactEmail  String   @map("contact_email") @db.VarChar(200)
+  contactPhone  String?  @map("contact_phone") @db.VarChar(50)
+  applyMethod   String   @map("apply_method") @db.Text
+  startDate     DateTime @map("start_date") @db.Date
+  endDate       DateTime @map("end_date") @db.Date
+  isActive      Boolean  @default(true) @map("is_active")
+  isUrgent      Boolean  @default(false) @map("is_urgent")
+  attachmentUrl String?  @map("attachment_url") @db.VarChar(500)
+  createdBy     String?  @map("created_by")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([jobType])
+  @@index([isActive])
+  @@index([isUrgent])
+  @@index([createdAt])
+  @@map("jobs")
+}
+
+enum JobType {
+  FULL_TIME  @map("Full-time")
+  PART_TIME  @map("Part-time")
+  INTERNSHIP @map("Internship")
+  CONTRACT   @map("Contract")
+}
+
+model Scholarship {
+  id                  String          @id @default(cuid())
+  scholarshipId       String          @unique @map("scholarship_id")
+  title               String          @db.VarChar(200)
+  type                ScholarshipType
+  sponsor             String          @db.VarChar(200)
+  amount              Decimal?        @db.Decimal(10, 2)
+  duration            String?         @db.VarChar(100)
+  description         String          @db.Text
+  eligibility         String          @db.Text
+  requiredDocs        String?         @map("required_docs") @db.Text
+  applicationDeadline DateTime        @map("application_deadline") @db.Date
+  announcementDate    DateTime?       @map("announcement_date") @db.Date
+  contactInfo         String          @map("contact_info") @db.Text
+  documentUrl         String?         @map("document_url") @db.VarChar(500)
+  isActive            Boolean         @default(true) @map("is_active")
+  createdBy           String?         @map("created_by")
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+
+  @@index([type])
+  @@index([isActive])
+  @@index([applicationDeadline])
+  @@map("scholarships")
+}
+
+enum ScholarshipType {
+  COMPANY
+  INBOUND
+  OUTBOUND
+  SPECIAL
+}
+
+model Activity {
+  id                   String    @id @default(cuid())
+  activityId           String    @unique @map("activity_id")
+  title                String    @db.VarChar(200)
+  category             String    @db.VarChar(100)
+  description          String    @db.Text
+  objectives           String?   @db.Text
+  targetAudience       String?   @map("target_audience") @db.VarChar(200)
+  location             String    @db.VarChar(200)
+  startDatetime        DateTime  @map("start_datetime")
+  endDatetime          DateTime  @map("end_datetime")
+  maxParticipants      Int?      @map("max_participants")
+  registrationDeadline DateTime? @map("registration_deadline") @db.Date
+  coordinator          String    @db.VarChar(200)
+  coordinatorContact   String    @map("coordinator_contact") @db.Text
+  imageUrls            String[]  @map("image_urls")
+  documentUrls         String[]  @map("document_urls")
+  isActive             Boolean   @default(true) @map("is_active")
+  createdBy            String?   @map("created_by")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@index([startDatetime])
+  @@index([isActive])
+  @@map("activities")
+}
+
+model Course {
+  id                String     @id @default(cuid())
+  courseId          String     @unique @map("course_id")
+  title             String     @db.VarChar(200)
+  type              CourseType
+  description       String     @db.Text
+  duration          String?    @db.VarChar(100)
+  schedule          String?    @db.VarChar(200)
+  location          String?    @db.VarChar(200)
+  instructor        String?    @db.VarChar(200)
+  maxParticipants   Int?       @map("max_participants")
+  fee               Decimal    @default(0) @db.Decimal(10, 2)
+  certificate       Boolean    @default(false)
+  registrationStart DateTime?  @map("registration_start") @db.Date
+  registrationEnd   DateTime?  @map("registration_end") @db.Date
+  courseStart       DateTime   @map("course_start") @db.Date
+  courseEnd         DateTime   @map("course_end") @db.Date
+  syllabusUrl       String?    @map("syllabus_url") @db.VarChar(500)
+  isActive          Boolean    @default(true) @map("is_active")
+  createdBy         String?    @map("created_by")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+
+  @@index([type])
+  @@index([courseStart])
+  @@index([isActive])
+  @@map("courses")
+}
+
+enum CourseType {
+  INTERNAL
+  EXTERNAL
+}
+
+model Instructor {
+  id                String             @id @default(cuid())
+  instructorId      String             @unique @map("instructor_id")
+  titleName         String             @map("title_name") @db.VarChar(50)
+  firstName         String             @map("first_name") @db.VarChar(100)
+  lastName          String             @map("last_name") @db.VarChar(100)
+  email             String             @unique @db.VarChar(200)
+  phone             String?            @db.VarChar(50)
+  officeLocation    String?            @map("office_location") @db.VarChar(200)
+  photoUrl          String?            @map("photo_url") @db.VarChar(500)
+  photoFileId       String?            @map("photo_file_id")
+  biography         String?            @db.Text
+  education         String?            @db.Text
+  expertise         String?            @db.Text
+  researchInterests String?            @map("research_interests") @db.Text
+  publications      String?            @db.Text
+  awards            String?            @db.Text
+  isActive          Boolean            @default(true) @map("is_active")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+  courses           InstructorCourse[]
+
+  @@index([email])
+  @@index([isActive])
+  @@map("instructors")
+}
+
+model InstructorCourse {
+  id           String     @id @default(cuid())
+  instructorId String     @map("instructor_id")
+  courseCode   String     @map("course_code") @db.VarChar(20)
+  courseNameTh String?    @map("course_name_th") @db.VarChar(200)
+  courseNameEn String?    @map("course_name_en") @db.VarChar(200)
+  semester     String?    @db.VarChar(10)
+  academicYear String?    @map("academic_year") @db.VarChar(10)
+  credits      Int?
+  createdAt    DateTime   @default(now()) @map("created_at")
+  instructor   Instructor @relation(fields: [instructorId], references: [instructorId], onDelete: Cascade)
+
+  @@index([instructorId])
+  @@map("instructor_courses")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  userId       String    @unique @map("user_id")
+  email        String    @unique @db.VarChar(200)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  fullName     String    @map("full_name") @db.VarChar(200)
+  role         UserRole  @default(VIEWER)
+  isActive     Boolean   @default(true) @map("is_active")
+  lastLogin    DateTime? @map("last_login")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  VIEWER
+}
