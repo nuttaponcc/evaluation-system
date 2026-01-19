@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1768715174218,
+      "tag": "0000_giant_grim_reaper",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1768715249136,
+      "tag": "0001_spicy_micromacro",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1768815070051,
+      "tag": "0002_volatile_shriek",
+      "breakpoints": true
+    }
+  ]
+}
